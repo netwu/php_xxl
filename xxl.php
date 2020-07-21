@@ -1,10 +1,8 @@
 <?php
-
-define('columns', 12);
-define('rows', 12);
 define('rand_str', ['🍓', '🍏', '🍎', '🍋']);
 define('bomb', '💣');
 define('sleep_time', 1);
+
 function createGrid()
 {
 	$grid = [];
@@ -34,7 +32,7 @@ function getRandStr()
 function printGrid($grid, $msg, $is_sleep = 1)
 {
 	$pre_str = '     ';
-	$max_len = strlen(columns);
+	$max_len = max(strlen(columns), 2);
 
 	system('clear');
 	echo "playing_____{$msg}", PHP_EOL;
@@ -45,6 +43,7 @@ function printGrid($grid, $msg, $is_sleep = 1)
 				$val = substr($pre_str . $val, -$max_len);
 			} else {
 				$val = substr($pre_str . $val, -4 - ($max_len - 2));
+				// $val = $val;
 			}
 			echo $val, ' ';
 		}
@@ -112,40 +111,62 @@ function reStartGrid(&$grid, $disappersgrid)
 	}
 }
 
-$grid = createGrid();
-$score = 0;
-printGrid($grid, 'score:' . $score, 1);
-while (true) {
-	$disappersgrid = detectGrid($grid);
-	if (empty($disappersgrid)) {
-		printGrid($grid, 'score:' . $score, 0);
-		fwrite(STDOUT, "输入两个交换坐标（行1,列1>行2,列2）：");
-		$msg = trim(fgets(STDIN));
-		$len_row = strlen(rows);
-		$len_column = strlen(columns);
-		$coordinates = explode('>', $msg);
-		if (empty($coordinates) || count($coordinates) != 2) {
-			printGrid($grid, '输入不合法,重新输入');
-		} else {
-			$c1 = explode(',', $coordinates[0]);
-			$c2 = explode(',', $coordinates[1]);
-			if (
-				(count($c1) != 2 || count($c2) != 2) ||
-				($c1[0] > rows || $c1[1] > columns || $c2[0] > rows || $c2[1] > columns) ||
-				min([$c1[0], $c1[1], $c2[0], $c2[1]]) < 0
-			) {
+function startGame()
+{
+	if (!defined('columns')) {
+		fwrite(STDOUT, "输入列数(大于等于3)：");
+		$column = trim(fgets(STDIN));
+		if (!is_numeric($column) || $column < 3) {
+			fwrite(STDOUT, '输入不合法,重新输入' . PHP_EOL);
+			startGame();
+		}
+		define('columns', $column + 1);
+	}
+	if (!defined('rows')) {
+		fwrite(STDOUT, "输入行数大于等于3)：");
+		$row = trim(fgets(STDIN));
+		if (!is_numeric($row) || $row < 3) {
+			fwrite(STDOUT, '输入不合法,重新输入' . PHP_EOL);
+			startGame();
+		}
+		define('rows', $row + 1);
+	}
+
+	$grid = createGrid();
+	$score = 0;
+	printGrid($grid, 'score:' . $score, 1);
+	while (true) {
+		$disappersgrid = detectGrid($grid);
+		if (empty($disappersgrid)) {
+			printGrid($grid, 'score:' . $score, 0);
+			fwrite(STDOUT, "输入两个交换坐标（行1,列1>行2,列2）：");
+			$msg = trim(fgets(STDIN));
+			$coordinates = explode('>', $msg);
+			if (empty($coordinates) || count($coordinates) != 2) {
 				printGrid($grid, '输入不合法,重新输入');
 			} else {
-				$tmp = $grid[$c1[0]][$c1[1]];
-				$grid[$c1[0]][$c1[1]] = $grid[$c2[0]][$c2[1]];
-				$grid[$c2[0]][$c2[1]] = $tmp;
+				$c1 = explode(',', $coordinates[0]);
+				$c2 = explode(',', $coordinates[1]);
+				if (
+					(count($c1) != 2 || count($c2) != 2) ||
+					($c1[0] > rows || $c1[1] > columns || $c2[0] > rows || $c2[1] > columns) ||
+					min([$c1[0], $c1[1], $c2[0], $c2[1]]) < 0
+				) {
+					printGrid($grid, '输入不合法,重新输入');
+				} else {
+					$tmp = $grid[$c1[0]][$c1[1]];
+					$grid[$c1[0]][$c1[1]] = $grid[$c2[0]][$c2[1]];
+					$grid[$c2[0]][$c2[1]] = $tmp;
+				}
 			}
+		} else {
+			$score++;
 		}
-	} else {
-		$score++;
+		redisplayGrid($grid, $disappersgrid, bomb);
+		printGrid($grid, 'score:' . $score, 1);
+		reStartGrid($grid, $disappersgrid);
+		printGrid($grid, 'score:' . $score);
 	}
-	redisplayGrid($grid, $disappersgrid, bomb);
-	printGrid($grid, 'score:' . $score, 1);
-	reStartGrid($grid, $disappersgrid);
-	printGrid($grid, 'score:' . $score);
 }
+
+startGame();
