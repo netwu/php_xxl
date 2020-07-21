@@ -43,7 +43,6 @@ function printGrid($grid, $msg, $is_sleep = 1)
 				$val = substr($pre_str . $val, -$max_len);
 			} else {
 				$val = substr($pre_str . $val, -4 - ($max_len - 2));
-				// $val = $val;
 			}
 			echo $val, ' ';
 		}
@@ -123,7 +122,7 @@ function startGame()
 		define('columns', $column + 1);
 	}
 	if (!defined('rows')) {
-		fwrite(STDOUT, "输入行数大于等于3)：");
+		fwrite(STDOUT, "输入行数(大于等于3)：");
 		$row = trim(fgets(STDIN));
 		if (!is_numeric($row) || $row < 3) {
 			fwrite(STDOUT, '输入不合法,重新输入' . PHP_EOL);
