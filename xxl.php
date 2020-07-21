@@ -3,6 +3,7 @@
 define('columns', 12);
 define('rows', 12);
 define('rand_str', ['🍓', '🍏', '🍎', '🍋']);
+define('bomb', '💣');
 define('sleep_time', 1);
 function createGrid()
 {
@@ -143,7 +144,7 @@ while (true) {
 	} else {
 		$score++;
 	}
-	redisplayGrid($grid, $disappersgrid, '💣');
+	redisplayGrid($grid, $disappersgrid, bomb);
 	printGrid($grid, 'score:' . $score, 1);
 	reStartGrid($grid, $disappersgrid);
 	printGrid($grid, 'score:' . $score);
