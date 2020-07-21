@@ -55,7 +55,7 @@ function printGrid($grid, $msg, $is_sleep = 1)
 	}
 }
 
-function detectionGrid($grid)
+function detectGrid($grid)
 {
 	$disappersgrid = [];
 	for ($i = 1; $i < columns; $i++) {
@@ -116,7 +116,7 @@ $grid = createGrid();
 $score = 0;
 printGrid($grid, 'score:' . $score, 1);
 while (true) {
-	$disappersgrid = detectionGrid($grid);
+	$disappersgrid = detectGrid($grid);
 	if (empty($disappersgrid)) {
 		printGrid($grid, 'score:' . $score, 0);
 		fwrite(STDOUT, "输入两个交换坐标（行1,列1>行2,列2）：");
