@@ -148,9 +148,7 @@ function startGame()
 				$c2 = explode(',', $coordinates[1]);
 
 				if (
-					(count($c1) != 2 || count($c2) != 2) ||
-					($c1[0] > rows || $c1[1] > columns || $c2[0] > rows || $c2[1] > columns) ||
-					(min([$c1[0], $c1[1], $c2[0], $c2[1]]) < 0)
+					isset($grid[$c1[0]][$c1[1]]) && isset($grid[$c2[0]][$c2[1]])
 				) {
 					$tmp = $grid[$c1[0]][$c1[1]];
 					$grid[$c1[0]][$c1[1]] = $grid[$c2[0]][$c2[1]];
