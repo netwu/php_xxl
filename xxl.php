@@ -146,16 +146,17 @@ function startGame()
 			} else {
 				$c1 = explode(',', $coordinates[0]);
 				$c2 = explode(',', $coordinates[1]);
+
 				if (
 					(count($c1) != 2 || count($c2) != 2) ||
 					($c1[0] > rows || $c1[1] > columns || $c2[0] > rows || $c2[1] > columns) ||
-					min([$c1[0], $c1[1], $c2[0], $c2[1]]) < 0
+					(min([$c1[0], $c1[1], $c2[0], $c2[1]]) < 0)
 				) {
-					printGrid($grid, '输入不合法,重新输入');
-				} else {
 					$tmp = $grid[$c1[0]][$c1[1]];
 					$grid[$c1[0]][$c1[1]] = $grid[$c2[0]][$c2[1]];
 					$grid[$c2[0]][$c2[1]] = $tmp;
+				} else {
+					printGrid($grid, '输入不合法,重新输入');
 				}
 			}
 		} else {
